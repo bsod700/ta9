@@ -1,5 +1,6 @@
-<mat-form-field appearance="fill">
-    <mat-label>Search Name</mat-label>
-    <input matInput #searchInput>
-</mat-form-field>
-<button mat-raised-button (click)="search(searchInput.value)">Search</button>
+<div class="search-bar-wrapper">
+    <form (ngSubmit)="search(searchInput.value, $event)">
+        <input #searchInput placeholder="Find by names">
+        <button mat-raised-button (click)="search(searchInput.value, $event)" type="submit">Search</button>
+    </form>
+</div>

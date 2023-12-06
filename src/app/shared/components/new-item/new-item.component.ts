@@ -27,7 +27,7 @@ export class NewItemComponent implements OnInit, OnChanges {
   @Input() itemIdToEdit: number | null = null;
   @Output() saveItem = new EventEmitter<number | null>();
   @Output() exitClick = new EventEmitter<boolean>();
-  @Output() submit = new EventEmitter<Item>()
+  // @Output() submit = new EventEmitter<Item>()
 
   private timeService: TimeService = inject(TimeService);
   private tableService: TableService = inject(TableService);
@@ -56,20 +56,21 @@ export class NewItemComponent implements OnInit, OnChanges {
     this.title = this.itemIdToEdit == null ? this.config.title : this.config.update
     console.log('from new item ', this.getCurrentUser());
     this.store.select(UserSelectors.selectUsername).subscribe(username => this.formData.createdBy = username as string)
+   
     
   }
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['itemIdToEdit'] && this.itemIdToEdit != null) {
-      this.title = this.itemIdToEdit == null ? this.config.title : this.config.update;
-      
-      this.getItemFromId(this.itemIdToEdit).subscribe(selectedItem => {
-        console.log('selectedItem ', selectedItem);
-        
-        if (selectedItem) {
-          this.setItemDataToForm(selectedItem);
-          console.log('formData', this.formData);
-        }
-      });
+    if (changes['itemIdToEdit']) {
+      if (this.itemIdToEdit != null) {
+        this.title = this.config.update;
+        this.getItemFromId(this.itemIdToEdit).subscribe(selectedItem => {
+          if (selectedItem) {
+            this.setItemDataToForm(selectedItem);
+          }
+        });
+      } else {
+        this.resetComponentState();
+      }
     }
   }
   onSubmit() {
@@ -81,7 +82,7 @@ export class NewItemComponent implements OnInit, OnChanges {
     const formData = this.formData as unknown as Item
     console.log('Form Data:', formData);
     this.tableService.saveItem(formData);
-    this.submit.emit(formData)
+    // this.submit.emit(formData)
     // this.resetForm()
   }
   updateData(id: number, data: Item) {
@@ -112,6 +113,11 @@ export class NewItemComponent implements OnInit, OnChanges {
   }
   getCurrentUser(): string| null {
     return this.userService.getCurrentUser()
+  }
+  resetComponentState() {
+    this.itemIdToEdit = null;
+    this.title = this.config.title;
+    this.resetForm();
   }
   resetForm(): void {
     this.formData.description = ''

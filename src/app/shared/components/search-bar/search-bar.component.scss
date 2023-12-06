@@ -1,0 +1,11 @@
+@import "../../../../styles/core/mixin";
+
+.search-bar-wrapper {
+    input {
+        min-height: 50px;
+        border: none;
+        background-color: #fff;
+        box-shadow: $shadow;
+        border-radius: 6px;
+    }
+}

@@ -37,13 +37,38 @@
         padding: 24px;
         height: calc(100vh - 12px);
         padding-bottom: 0;
+        background-color: #F2F6F9;
         .buttons {
             display: flex;
             gap: 6px;
+            .rows {
+                .selected {
+                    &::ng-deep {
+                        .mat-mdc-button-persistent-ripple {
+                            background-color: #ffffffa6;
+                        }
+                    }
+                }
+            }
+            .boxes {
+                .selected {
+                    &::ng-deep {
+                        .mat-mdc-button-persistent-ripple {
+                            background-color: #ffffffa6;
+                        }
+                    }              
+                }
+            }
+            .add {
+                .selected {
+                    
+                }
+            }
         }
         .top {
             display: flex;
             justify-content: space-between;
+            margin-bottom: 24px;
         }
     }
     .drawer {

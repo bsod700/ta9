@@ -21,12 +21,13 @@ export class TableComponent implements AfterViewInit, OnInit, OnChanges  {
     titles: string[],
     content: Item[]
   }
+  @Input() filter = ""
   @Output() rowClicked = new EventEmitter<number>();
-  
+  @Input() view: string = 'rows'
 
   dataSource: any
   selectedRow: any;
-
+  items: Item[] = []
   constructor(private _liveAnnouncer: LiveAnnouncer) {
    
   }
@@ -36,13 +37,13 @@ export class TableComponent implements AfterViewInit, OnInit, OnChanges  {
       content: this.content.content
     }
     
-    this.dataSource = new MatTableDataSource<Item>(this.content.content);
+    this.searchNames()
     this.updatePaginatorProperties();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes && this.content) {
-      this.dataSource = new MatTableDataSource<Item>(this.content.content);
+      this.searchNames()
       this.updatePaginatorProperties();
     }
    
@@ -54,7 +55,7 @@ export class TableComponent implements AfterViewInit, OnInit, OnChanges  {
     this.dataSource.paginator = this.paginator;
   }
 
-  onRowClick(row: any) {
+  onRowClick(row: Item) {
     this.rowClicked.emit(row.id);
     this.selectedRow = row;
   }
@@ -81,5 +82,20 @@ export class TableComponent implements AfterViewInit, OnInit, OnChanges  {
 
   updatePaginatorProperties() {
     this.length = this.content.content.length;
+  }
+
+  searchNames() {
+    const applyFilter = this.content.content.filter(item =>
+      item.name.toLowerCase().includes(this.filter.toLowerCase())
+    );
+    this.setDataSource(applyFilter)
+    this.items = applyFilter
+  }
+  setDataSource(content: Item[]): void {
+    this.dataSource = new MatTableDataSource<Item>(content);
+  }
+
+  isColorString(value: string): boolean {
+    return /^#([0-9a-f]{3}){1,2}$/i.test(value);
   }
 }

@@ -49,7 +49,8 @@ export class MainComponent implements OnInit, OnDestroy {
   selectedRow!: number | null
 
   onExitClick: boolean = false
-  
+  view: string = 'rows'
+
   ngOnInit(): void {
     const items = this.tableService.loadItemHttp()
     this.tableService.saveItemsHttp(items)
@@ -78,6 +79,7 @@ export class MainComponent implements OnInit, OnDestroy {
     this.tableService.getItems().pipe(
       takeUntil(this.destroy$)
     ).subscribe((data: Item[]) => {
+      console.log('Data received:', data); 
       this.table.content = data;
       this.getTableTitles()
     });
@@ -112,9 +114,7 @@ export class MainComponent implements OnInit, OnDestroy {
     this.drawer.open()
     this.selectedRow = null
   }
-  onSaveNewItem(item: Item): void {
-    if(item) {
-      this.getTableContent()
-    }
+  changeView(view: string) {
+    this.view = view
   }
 }

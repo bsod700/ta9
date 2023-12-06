@@ -1,12 +1,12 @@
+import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, EventEmitter, Output } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-search-bar',
   standalone: true,
-  imports: [MatFormFieldModule, MatInputModule, MatButtonModule],
+  imports: [MatButtonModule],
   templateUrl: './search-bar.component.html',
   styleUrl: './search-bar.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -14,7 +14,10 @@ import { MatInputModule } from '@angular/material/input';
 export class SearchBarComponent {
   @Output() searchEvent = new EventEmitter<string>();
 
-  search(value: string) {
+  searchTerm: string = '';
+
+  search(value: string, event: Event) {
+    event.preventDefault();
     this.searchEvent.emit(value);
   }
 }

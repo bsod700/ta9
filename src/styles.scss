@@ -1,1 +1,25 @@
 /* You can add global styles to this file, and also import other style files */
+@import "./styles/core//mixin";
+
+
+html, body { height: 100%; }
+body { 
+    margin: 0; 
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+    background-color: var(--mat-sidenav-content-background-color);
+ }
+
+.shadow {
+    box-shadow: $shadow;
+}
+
+p {
+    font-size: 20px;
+    font-weight: 300;
+    margin-bottom: 0;
+}
+* {
+    line-height: 1.1;
+    box-sizing: border-box;
+    margin: 0;
+}

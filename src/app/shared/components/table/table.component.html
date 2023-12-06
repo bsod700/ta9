@@ -1,0 +1,22 @@
+<div class="table-wrapper">
+    <table mat-table [dataSource]="dataSource" matSort (matSortChange)="announceSortChange($event)" class="mat-elevation-z8">
+
+        <ng-container [matColumnDef]="header" *ngFor="let header of content.titles">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header [sortActionDescription]="'Sort by' + header">
+            {{header}}
+            </th>
+            <td mat-cell *matCellDef="let element"> {{element[header]}} </td>
+        </ng-container>
+    
+        <tr mat-header-row *matHeaderRowDef="content.titles"></tr>
+        <tr (click)="onRowClick(row)" mat-row *matRowDef="let row; columns: content.titles;" [class.selected]="selectedRow === row"></tr>
+    </table>
+    
+    <mat-paginator #paginator
+                   (page)="handlePageEvent($event)"
+                   [length]="length"
+                   [pageSize]="pageSize"
+                   [pageSizeOptions]="[5, 10, 20]"
+                   aria-label="Select page">
+    </mat-paginator>
+</div>

@@ -1,0 +1,13 @@
+<div class="color-picker-wrapper">
+    <div class="selected-color shadow" (click)="toggleColorPicker()">
+        <div class="color" [style.background]="selectedColor"></div>
+        <div class="caret"></div>
+    </div>
+    <div class="color-table shadow" [ngClass]="{'selected': isSelected}">
+        <div *ngFor="let baseColor of baseColors" class="color-column">
+          <div class="color-swatch" [style.background]="baseColor" (click)="selectColor(baseColor)"></div>
+          <div *ngFor="let shade of generateShades(baseColor)" class="color-swatch" [style.background]="shade" (click)="selectColor(shade)"></div>
+        </div>
+    </div>
+</div>
+  

@@ -1,0 +1,43 @@
+@import "../../../../styles/core/mixin";
+.new-item-wrapper {
+    position: relative;
+    padding: 50px 75px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    .close {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+    }
+    .buttons {
+        display: flex;
+        justify-content: space-between;
+    }
+    .row {
+        display: flex;
+        gap: 6px;
+        margin-bottom: 24px;
+    }
+    .form-input {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+    .color {
+        input {
+            display: none;
+        }
+    }
+    input, textarea {
+        min-height: 50px;
+        border: none;
+        background-color: #fff;
+        box-shadow: $shadow;
+        border-radius: 6px;
+    }
+    textarea {
+
+    }
+}

@@ -1,0 +1,22 @@
+{
+   "items": [
+        {
+            "id": 0,
+            "description": "bla bla bla",
+            "color": "#fffa23",
+            "name": "string",
+            "createDate": "03/02/2021",
+            "lastUpdate": "03/02/2021",
+            "createdBy": "piipii"
+        },
+        {
+            "id": 1,
+            "description": "bla bla bla",
+            "color": "#000000",
+            "name": "string",
+            "createDate": "03/02/2021",
+            "lastUpdate": "03/02/2021",
+            "createdBy": "poopoo"
+        }
+   ]
+}

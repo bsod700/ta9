@@ -1,0 +1,31 @@
+<div class="new-item-wrapper">
+    <div class="close">
+        <button mat-mini-fab aria-label="close" (click)="onExitClick()" color="primary">
+          <mat-icon>close</mat-icon>
+        </button>
+    </div>
+    <div class="content">
+      <h2>{{title}}</h2>
+      <form (ngSubmit)="onSubmit()">
+        <div class="row">
+          <div class="name form-input">
+            <label>Name</label>
+            <input [(ngModel)]="formData.name" name="name" required>
+          </div>
+          <div class="color form-input">
+            <label>Color</label>
+            <app-color-picker (color)="onColorChange($event)" [selectedColor]="formData.color"/>
+            <input [(ngModel)]="formData.color" name="color" required>
+          </div>
+        </div>
+        <div class="description form-input">
+          <label>Description</label>
+          <textarea [(ngModel)]="formData.description" name="description"></textarea>
+        </div>  
+      </form>
+    </div>
+    <div class="buttons">
+      <button mat-raised-button color="primary" type="submit" (click)="onSubmit()">Save</button>
+      <button mat-raised-button color="warn" (click)="onCancel()">Cancel</button>
+    </div>
+</div>

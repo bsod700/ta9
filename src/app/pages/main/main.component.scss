@@ -1,0 +1,52 @@
+@import "../../../styles//core//mixin";
+
+.main-wrapper {
+    position: relative;
+    height: 100vh;
+    z-index: 1;
+    @include make-container(24px);
+    padding-top: 12px;
+    .overlay {
+        position: absolute;
+        width: 100vw;
+        height: 100vh;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ffffffa6;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10;
+        backdrop-filter: blur(10px);
+    }
+    .navbar {
+        display: flex;
+        flex-direction: row-reverse;
+        .user {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            p {
+                margin-bottom: 0;
+            }
+        }
+    }
+    .content {
+        padding: 24px;
+        height: calc(100vh - 12px);
+        padding-bottom: 0;
+        .buttons {
+            display: flex;
+            gap: 6px;
+        }
+        .top {
+            display: flex;
+            justify-content: space-between;
+        }
+    }
+    .drawer {
+        height: 100%;
+    }
+}

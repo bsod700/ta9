@@ -1,0 +1,20 @@
+
+.table-wrapper {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 180px);
+    justify-content: space-between;
+    table {
+        tr {
+            cursor: pointer;
+            th,td {
+                &:nth-of-type(1) , &:nth-of-type(2) {
+                    display: none;
+                }
+            }
+        }
+        .selected {
+            background-color: #e4eeff;
+        }
+    }
+}

@@ -1,0 +1,56 @@
+
+<div class="main-wrapper">
+    <div class="overlay" *ngIf="!(username$ | async)">
+        <app-login />
+    </div>
+    <div class="drawer">
+        <mat-drawer-container autosize hasBackdrop="true" from="right">
+            <mat-drawer #drawer mode="side" mode="over" position="end">
+                <app-new-item (exitClick)="exitClick($event)" [itemIdToEdit]="selectedRow" (submit)="onSaveNewItem($event)"/>
+            </mat-drawer>
+        
+            <div class="content">
+            <div class="navbar">
+                <div class="user">
+                    <p *ngIf="username$ | async as username">
+                        Hello {{ username }} 👋!
+                    </p>
+                    <button mat-mini-fab color="primary" aria-label="logout" (click)="logout()">
+                        <mat-icon>logout</mat-icon>
+                    </button>
+                </div>
+            </div>
+            <div class="content">
+                <div class="top">
+                    <app-search-bar (searchEvent)="applyFilter($event)" />
+                    <div class="buttons">
+                        <div class="rows">
+                            <button mat-mini-fab color="primary" aria-label="rows">
+                                <mat-icon>rows</mat-icon>
+                            </button>
+                        </div>
+                        <div class="tiles">
+                            <button mat-mini-fab color="primary" aria-label="tiles">
+                                <mat-icon>tiles</mat-icon>
+                            </button>
+                        </div>
+                        <div class="add">
+                            <button mat-mini-fab color="primary" aria-label="add" (click)="onClickOnAdd()">
+                                <mat-icon>add</mat-icon>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            
+                <app-table [content]="table" (rowClicked)="onRowClicked($event)" 
+               
+                />
+            
+            </div>
+            </div>
+        
+        </mat-drawer-container>
+
+       
+    </div>
+</div>

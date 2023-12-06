@@ -1,0 +1,10 @@
+<div class="login-wrapper shadow">
+    <form (submit)="onSave()">
+        <p>Login</p>
+        <mat-form-field >
+            <mat-label>username</mat-label>
+            <input type="text" matInput placeholder="Enter username" [(ngModel)]="username" name="username">
+        </mat-form-field>
+        <button mat-raised-button color="primary" (click)="onSave()">Save</button>
+    </form>
+</div>

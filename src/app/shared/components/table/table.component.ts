@@ -1,6 +1,6 @@
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild, inject } from '@angular/core';
 import { MatSort, MatSortModule, Sort } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { Item } from '../../interfaces/item.interface';
@@ -25,30 +25,33 @@ export class TableComponent implements AfterViewInit, OnInit, OnChanges  {
   @Output() rowClicked = new EventEmitter<number>();
   @Input() view: string = 'rows'
 
-  dataSource: any
-  selectedRow: any;
-  items: Item[] = []
-  constructor(private _liveAnnouncer: LiveAnnouncer) {
-   
-  }
+  dataSource: MatTableDataSource<Item> = new MatTableDataSource<Item>();
+  selectedRow: Item | null = null;
+
+  pageEvent!: PageEvent;
+  length = 0; // Total number of items in the dataset
+  pageSize = 10; // Default number of items per page
+
+  private _liveAnnouncer: LiveAnnouncer = inject(LiveAnnouncer);
+  private cdr: ChangeDetectorRef = inject(ChangeDetectorRef)
+
+  @ViewChild(MatSort) sort!: MatSort;
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+
   ngOnInit(): void {
-    this.content = {
-      titles: this.content.titles,
-      content: this.content.content
-    }
-    
-    this.searchNames()
-    this.updatePaginatorProperties();
+    this.setDataSource(this.content.content);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes && this.content) {
-      this.searchNames()
-      this.updatePaginatorProperties();
+    if (changes['content']) {
+      console.log("changes['content'] ", changes['content'].currentValue.content);
+      
+      this.setDataSource(changes['content'].currentValue.content);
     }
-   
+    if (changes['filter']) {
+      this.applyFilter();
+    }
   }
-  @ViewChild(MatSort) sort!: MatSort;
 
   ngAfterViewInit() {
     this.dataSource.sort = this.sort;
@@ -60,7 +63,6 @@ export class TableComponent implements AfterViewInit, OnInit, OnChanges  {
     this.selectedRow = row;
   }
 
-
   announceSortChange(sortState: Sort) {
     if (sortState.direction) {
       this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
@@ -68,34 +70,32 @@ export class TableComponent implements AfterViewInit, OnInit, OnChanges  {
       this._liveAnnouncer.announce('Sorting cleared');
     }
   }
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-  
-  pageEvent!: PageEvent;
-  length = 0; // Total number of items in the dataset
-  pageSize = 10; // Default number of items per page
 
-  handlePageEvent(e: PageEvent) {
-    const pageIndex = e.pageIndex;
-    this.pageSize = e.pageSize;
-    const previousSize = this.pageSize * pageIndex;
+  handlePageEvent(event: PageEvent) {
+    this.pageSize = event.pageSize;
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.pageIndex = event.pageIndex;
+    }
   }
 
-  updatePaginatorProperties() {
-    this.length = this.content.content.length;
+  setDataSource(data: Item[]) {
+    console.log('setDataSource');
+    
+    this.dataSource.data = data;
+    this.length = data.length;
+    this.cdr.markForCheck();
   }
 
-  searchNames() {
-    const applyFilter = this.content.content.filter(item =>
-      item.name.toLowerCase().includes(this.filter.toLowerCase())
-    );
-    this.setDataSource(applyFilter)
-    this.items = applyFilter
-  }
-  setDataSource(content: Item[]): void {
-    this.dataSource = new MatTableDataSource<Item>(content);
+  applyFilter() {
+    const filterValue = this.filter.toLowerCase().trim();
+    this.dataSource.filter = filterValue;
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
   }
 
   isColorString(value: string): boolean {
     return /^#([0-9a-f]{3}){1,2}$/i.test(value);
   }
+  
 }

@@ -81,6 +81,7 @@ export class MainComponent implements OnInit, OnDestroy {
     ).subscribe((data: Item[]) => {
       console.log('Data received:', data); 
       this.table.content = data;
+      console.log('this.table.content:', this.table); 
       this.getTableTitles()
     });
   }

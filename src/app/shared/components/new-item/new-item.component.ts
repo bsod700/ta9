@@ -65,7 +65,8 @@ export class NewItemComponent implements OnInit, OnChanges {
         this.title = this.config.update;
         this.getItemFromId(this.itemIdToEdit).subscribe(selectedItem => {
           if (selectedItem) {
-            this.setItemDataToForm(selectedItem);
+            const editableItem = { ...selectedItem };
+            this.setItemDataToForm(editableItem);
           }
         });
       } else {

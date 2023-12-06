@@ -23,11 +23,29 @@ import { UserService } from '../../services/user.service';
   styleUrl: './new-item.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NewItemComponent implements OnInit, OnChanges {
-  @Input() itemIdToEdit: number | null = null;
-  @Output() saveItem = new EventEmitter<number | null>();
+export class NewItemComponent implements OnInit {
+  @Input('itemIdToEdit') set _itemIdToEdit(itemIdToEdit: number | null) {
+    if(itemIdToEdit != null) {
+      console.log('ther is id!');
+      
+      this.isHasId = true
+      this.itemIdToEdit = itemIdToEdit 
+    } else {
+      this.isHasId = false
+      this.itemIdToEdit = null
+    }
+    this.resetComponentState()
+    this.title = itemIdToEdit == null ? this.config.title : this.config.update
+    this.getItemFromId(itemIdToEdit).subscribe(selectedItem => {
+      if (selectedItem) {
+        const editableItem = { ...selectedItem };
+        this.setItemDataToForm(editableItem);
+      }
+    });
+    itemIdToEdit = null
+  }
+  @Output() saveItem = new EventEmitter<Item>();
   @Output() exitClick = new EventEmitter<boolean>();
-  // @Output() submit = new EventEmitter<Item>()
 
   private timeService: TimeService = inject(TimeService);
   private tableService: TableService = inject(TableService);
@@ -41,54 +59,36 @@ export class NewItemComponent implements OnInit, OnChanges {
   }
   title!: string;
 
-  formData = {
-    id: 0,
-    description: '',
-    name: '',
-    color: '',
-    createdDate: '',
-    lastUpdate: '',
-    createdBy: 'YourUserName'
-  };
+  formData!: Item
 
+  isHasId: boolean = false
+  itemIdToEdit!: number | null
 
   ngOnInit(): void {
-    this.title = this.itemIdToEdit == null ? this.config.title : this.config.update
-    console.log('from new item ', this.getCurrentUser());
+    this.resetForm();
     this.store.select(UserSelectors.selectUsername).subscribe(username => this.formData.createdBy = username as string)
-   
-    
   }
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['itemIdToEdit']) {
-      if (this.itemIdToEdit != null) {
-        this.title = this.config.update;
-        this.getItemFromId(this.itemIdToEdit).subscribe(selectedItem => {
-          if (selectedItem) {
-            const editableItem = { ...selectedItem };
-            this.setItemDataToForm(editableItem);
-          }
-        });
-      } else {
-        this.resetComponentState();
-      }
-    }
-  }
+
   onSubmit() {
-    const currentDate = new Date();
-    let lastIndex = this.tableService.getItemsLength()
-    this.formData.id = lastIndex++
-    this.formData.createdDate = this.timeService.formatDate(currentDate);
-    this.formData.lastUpdate = this.timeService.formatDate(currentDate);
-    const formData = this.formData as unknown as Item
-    console.log('Form Data:', formData);
-    this.tableService.saveItem(formData);
-    // this.submit.emit(formData)
-    // this.resetForm()
+    if(this.isHasId) {
+      const currentDate = new Date();
+      this.formData.lastUpdate = this.timeService.formatDate(currentDate);
+      this.updateData(this.itemIdToEdit as number, this.formData)
+    } else {
+      this.addNewItem()
+    }
+    this.saveItem.emit(this.formData);
+    this.resetForm();
+    this.exitClick.emit(true);
   }
+
   updateData(id: number, data: Item) {
-    if(id)
+    if(id) {
+      console.log('updateData data', data, ' id ', id);
+
       this.tableService.updateItemById(id,data);
+    }
+      
   }
  
   onCancel() {
@@ -98,31 +98,51 @@ export class NewItemComponent implements OnInit, OnChanges {
   onExitClick() {
     this.exitClick.emit(true);
   }
+
   onColorChange(color: string): void {
     this.formData.color = color
   }
-  getItemFromId(selectedId: number): Observable<Item | null> {
+
+  getItemFromId(selectedId: number | null): Observable<Item | null> {
     return this.tableService.getItems().pipe(
       map(data => data.find(item => item.id === selectedId) || null)
     );
   }
   
   setItemDataToForm(item: Item): void {
-    this.formData.description = item.description
-    this.formData.name = item.name
-    this.formData.color = item.color
+    this.formData = item
   }
+
   getCurrentUser(): string| null {
     return this.userService.getCurrentUser()
   }
+
   resetComponentState() {
-    this.itemIdToEdit = null;
     this.title = this.config.title;
     this.resetForm();
   }
+
   resetForm(): void {
-    this.formData.description = ''
-    this.formData.name = ''
-    this.formData.color = ''
+    this.formData = {
+      id: 0,
+      description: '',
+      name: '',
+      color: '',
+      createDate: '',
+      lastUpdate: '',
+      createdBy: ''
+    };
+  }
+
+  addNewItem(): void {
+    const currentDate = new Date();
+    let lastIndex = this.tableService.getItemsLength()
+    this.formData.id = lastIndex++
+    this.formData.createDate = this.timeService.formatDate(currentDate);
+    this.formData.lastUpdate = this.timeService.formatDate(currentDate);
+    this.formData.createdBy = this.getCurrentUser() ?? ''
+    console.log('Form Data:', this.formData);
+    this.tableService.saveItem(this.formData);
+    
   }
 }

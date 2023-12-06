@@ -1,11 +1,12 @@
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild, inject } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild, inject } from '@angular/core';
 import { MatSort, MatSortModule, Sort } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { Item } from '../../interfaces/item.interface';
 
 import {MatPaginator, MatPaginatorModule, PageEvent} from '@angular/material/paginator';
+import { DataTable } from '../../interfaces/data-table.interface';
 
 @Component({
   selector: 'app-table',
@@ -16,14 +17,14 @@ import {MatPaginator, MatPaginatorModule, PageEvent} from '@angular/material/pag
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
-export class TableComponent implements AfterViewInit, OnInit, OnChanges  {
-  @Input() content!: {
-    titles: string[],
-    content: Item[]
+export class TableComponent implements AfterViewInit  {
+  @Input('content') set _content(content: DataTable) {
+    this.setDataSource(content.content);
+    this.content = content;
   }
-  @Input() filter = ""
+  @Input() filter = "";
   @Output() rowClicked = new EventEmitter<number>();
-  @Input() view: string = 'rows'
+  @Input() view: string = 'rows';
 
   dataSource: MatTableDataSource<Item> = new MatTableDataSource<Item>();
   selectedRow: Item | null = null;
@@ -32,26 +33,12 @@ export class TableComponent implements AfterViewInit, OnInit, OnChanges  {
   length = 0; // Total number of items in the dataset
   pageSize = 10; // Default number of items per page
 
+  content!: DataTable;
+
   private _liveAnnouncer: LiveAnnouncer = inject(LiveAnnouncer);
-  private cdr: ChangeDetectorRef = inject(ChangeDetectorRef)
 
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
-
-  ngOnInit(): void {
-    this.setDataSource(this.content.content);
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['content']) {
-      console.log("changes['content'] ", changes['content'].currentValue.content);
-      
-      this.setDataSource(changes['content'].currentValue.content);
-    }
-    if (changes['filter']) {
-      this.applyFilter();
-    }
-  }
 
   ngAfterViewInit() {
     this.dataSource.sort = this.sort;
@@ -79,11 +66,8 @@ export class TableComponent implements AfterViewInit, OnInit, OnChanges  {
   }
 
   setDataSource(data: Item[]) {
-    console.log('setDataSource');
-    
-    this.dataSource.data = data;
+    this.dataSource.data = [...data];
     this.length = data.length;
-    this.cdr.markForCheck();
   }
 
   applyFilter() {

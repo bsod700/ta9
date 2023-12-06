@@ -1,10 +1,10 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, ViewChild, inject } from '@angular/core';
 import { SearchBarComponent } from '../../shared/components/search-bar/search-bar.component';
 import { TableComponent } from '../../shared/components/table/table.component';
 import { TableService } from '../..//shared/services/table.service';
 import { Item } from '../../shared/interfaces/item.interface';
 import { HttpClientModule } from '@angular/common/http';
-import { Observable, Subject, map, takeUntil, tap } from 'rxjs';
+import { Observable } from 'rxjs';
 import { NewItemComponent } from '../../shared/components/new-item/new-item.component';
 import { Store } from '@ngrx/store';
 import * as UserSelectors from '../../shared/store/user/selectors/user.selectors';
@@ -16,6 +16,7 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatDrawer, MatSidenavModule} from '@angular/material/sidenav';
 import { AppState } from '../../shared/store/core/app.state';
 import { UserService } from '../../shared/services/user.service';
+import { DataTable } from '../../shared/interfaces/data-table.interface';
 
 @Component({
   selector: 'app-main',
@@ -26,10 +27,9 @@ import { UserService } from '../../shared/services/user.service';
   styleUrl: './main.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MainComponent implements OnInit, OnDestroy {
+export class MainComponent implements OnInit {
   @ViewChild('drawer') drawer!: MatDrawer;
-  
-  private destroy$ = new Subject<void>();
+
   private store: Store<AppState> = inject(Store<AppState>)
   private userService: UserService = inject(UserService)
   username$!: Observable<string | null>;
@@ -37,10 +37,7 @@ export class MainComponent implements OnInit, OnDestroy {
   filter = '';
   tableService: TableService = inject(TableService)
 
-  table: {
-    titles: string[],
-    content: Item[]
-  } = {
+  table: DataTable = {
     titles: [],
     content: []
   }
@@ -55,7 +52,6 @@ export class MainComponent implements OnInit, OnDestroy {
     const items = this.tableService.loadItemHttp()
     this.tableService.saveItemsHttp(items)
 
-    this.store.subscribe(state => console.log(state));
     this.username$ = this.store.select(UserSelectors.selectUsername);
 
     this.getTableContent()
@@ -63,58 +59,49 @@ export class MainComponent implements OnInit, OnDestroy {
     this.username$.subscribe(username => {
       console.log('Username from store:', username);
     });
-
-    
-    
   }
 
   applyFilter(filterValue: string) {
+    console.log('filterValue ', filterValue);
+    
     this.filter = filterValue;
   }
+
   logout():void {
     this.store.dispatch(UserActions.logout());
   }
 
   getTableContent(): void {
-    this.tableService.getItems().pipe(
-      takeUntil(this.destroy$)
-    ).subscribe((data: Item[]) => {
-      console.log('Data received:', data); 
+    this.tableService.getItems().subscribe((data: Item[]) => {
       this.table.content = data;
-      console.log('this.table.content:', this.table); 
       this.getTableTitles()
     });
   }
   
   getTableTitles(): void {
-    this.tableService.getTitles().pipe(
-      takeUntil(this.destroy$)
-    ).subscribe(data => {
-      this.table.titles = data;
+    this.tableService.getTitles().subscribe((titles: string[]) => {
+      this.table.titles = titles;
     });
   }
 
   onRowClicked(id: number) {
     this.selectedRow = id;
-    console.log('id: ', id);
     this.drawer.open()
   }
 
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
   onItemSave(data: Item | null) {
-    console.log('from main: ', data);
-    
+    this.table = {titles: this.table.titles, content: this.table.content};
   }
+
   exitClick(isClick: boolean) {
     isClick ? this.drawer.close() : ''
   }
+
   onClickOnAdd() {
     this.drawer.open()
     this.selectedRow = null
   }
+  
   changeView(view: string) {
     this.view = view
   }

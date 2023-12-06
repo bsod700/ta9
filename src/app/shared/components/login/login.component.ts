@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { UserService } from '../../services/user.service';
 import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
@@ -15,8 +15,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 })
 export class LoginComponent {
   username: string = '';
-
-  constructor(private userService: UserService) {}
+  private userService: UserService = inject(UserService)
 
   onSave(): void {
     this.userService.saveUsername(this.username);

@@ -6,7 +6,7 @@
     <div class="drawer">
         <mat-drawer-container autosize hasBackdrop="true" from="right">
             <mat-drawer #drawer mode="side" mode="over" position="end">
-                <app-new-item (exitClick)="exitClick($event)" [itemIdToEdit]="selectedRow"/>
+                <app-new-item (exitClick)="exitClick($event)" [itemIdToEdit]="selectedRow" (saveItem)="onItemSave($event)"/>
             </mat-drawer>
         
             <div class="content">
@@ -42,6 +42,8 @@
                     </div>
                 </div>
             
+
+
                 <app-table [content]="table" (rowClicked)="onRowClicked($event)" [filter]="filter" [view]="view"/>
             
             </div>

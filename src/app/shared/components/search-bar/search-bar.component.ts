@@ -1,6 +1,4 @@
-import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, EventEmitter, Output } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 
 @Component({
@@ -16,8 +14,8 @@ export class SearchBarComponent {
 
   searchTerm: string = '';
 
-  search(value: string, event: Event) {
-    event.preventDefault();
+  search(value: string) {
+    console.log(value);
     this.searchEvent.emit(value);
   }
 }

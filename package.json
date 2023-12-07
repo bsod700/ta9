@@ -7,7 +7,8 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:ta9": "node dist/ta9/server/server.mjs"
+    "serve:ssr:ta9": "node dist/ta9/server/server.mjs",
+    "build:start": "npm run build && npm run serve:ssr:ta9"
   },
   "private": true,
   "dependencies": {

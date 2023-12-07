@@ -28,7 +28,10 @@ export class TableComponent implements AfterViewInit  {
     this.paginatedData = content.content;
     this.applyFilter();
   }
-  @Input() filter = "";
+  @Input('filter') set _filter(filter: string) {
+    this.filter = filter
+    this.applyFilter();
+  };
   @Output() rowClicked = new EventEmitter<number>();
   @Input() view: string = 'rows';
 
@@ -42,6 +45,8 @@ export class TableComponent implements AfterViewInit  {
   content!: DataTable;
 
   paginatedData: Item[] = [];
+
+  filter: string = ""
 
   private _liveAnnouncer: LiveAnnouncer = inject(LiveAnnouncer);
 
@@ -107,6 +112,7 @@ export class TableComponent implements AfterViewInit  {
   applyFilter() {
     const filterValue = this.filter.toLowerCase().trim();
     this.dataSource.filter = filterValue;
+    
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }

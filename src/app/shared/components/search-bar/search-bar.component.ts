@@ -22,7 +22,6 @@ export class SearchBarComponent {
  * @param value The search term entered by the user.
  */
   search(value: string) {
-    console.log(value);
     this.searchEvent.emit(value);
   }
 }

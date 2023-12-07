@@ -18,11 +18,15 @@ import { DataTable } from '../../interfaces/data-table.interface';
 })
 
 export class TableComponent implements AfterViewInit  {
+  /**
+   * Sets the content for the table and applies the filter.
+   * @param content The data to be displayed in the table.
+   */
   @Input('content') set _content(content: DataTable) {
     this.setDataSource(content.content);
     this.content = content;
-    this.paginatedData = content.content
-    this.applyFilter()
+    this.paginatedData = content.content;
+    this.applyFilter();
   }
   @Input() filter = "";
   @Output() rowClicked = new EventEmitter<number>();
@@ -44,17 +48,28 @@ export class TableComponent implements AfterViewInit  {
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
+  /**
+ * Initializes sort and paginator after view init.
+ */
   ngAfterViewInit() {
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
     this.paginateData();
   }
 
-  onRowClick(row: Item) {
+  /**
+ * Emits the clicked row's ID and marks it as selected.
+ * @param row The item corresponding to the clicked row.
+ */
+  onRowClick(row: Item): void {
     this.rowClicked.emit(row.id);
     this.selectedRow = row;
   }
 
+  /**
+ * Announces the current sort state for accessibility.
+ * @param sortState The current state of sorting.
+ */
   announceSortChange(sortState: Sort) {
     if (sortState.direction) {
       this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
@@ -63,6 +78,10 @@ export class TableComponent implements AfterViewInit  {
     }
   }
 
+  /**
+ * Handles page change events for pagination.
+ * @param event The pagination event data.
+ */
   handlePageEvent(event: PageEvent) {
     this.pageSize = event.pageSize;
     if (this.dataSource.paginator) {
@@ -73,11 +92,18 @@ export class TableComponent implements AfterViewInit  {
     this.paginateData();
   }
 
+  /**
+ * Sets the data source for the table.
+ * @param data Array of items to be displayed.
+ */
   setDataSource(data: Item[]) {
     this.dataSource.data = [...data];
     this.length = data.length;
   }
 
+  /**
+ * Applies a filter to the table data.
+ */
   applyFilter() {
     const filterValue = this.filter.toLowerCase().trim();
     this.dataSource.filter = filterValue;
@@ -86,10 +112,18 @@ export class TableComponent implements AfterViewInit  {
     }
   }
 
+  /**
+ * Checks if a given value is a valid hex color string.
+ * @param value The value to check.
+ * @returns True if the value is a valid hex color.
+ */
   isColorString(value: string): boolean {
     return /^#([0-9a-f]{3}){1,2}$/i.test(value);
   }
   
+  /**
+ * Paginates the data based on the current page index and size.
+ */
   paginateData() {
     const startIndex = this.paginator.pageIndex * this.paginator.pageSize;
     this.paginatedData = this.dataSource.filteredData.slice(startIndex, startIndex + this.paginator.pageSize);

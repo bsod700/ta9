@@ -14,9 +14,16 @@ import {MatFormFieldModule} from '@angular/material/form-field';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginComponent {
-  username: string = '';
-  private userService: UserService = inject(UserService)
 
+  // Holds the username entered by the user.
+  username: string = '';
+
+  // Injects the UserService for user-related operations.
+  private userService: UserService = inject(UserService);
+
+  /**
+ * Saves the current username using the UserService.
+ */
   onSave(): void {
     this.userService.saveUsername(this.username);
   }

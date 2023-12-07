@@ -65,8 +65,8 @@
         display: grid;
         grid-template-columns: repeat(auto-fill, 200px);
         grid-template-rows: repeat(auto-fill, 200px);
-        gap: 24px; /* Optional: space between grid items */
-        width: 100%; /* Takes the full width of the window */
+        gap: 24px;
+        width: 100%;
         overflow: auto;
         padding: 24px 0;
         .box {

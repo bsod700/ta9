@@ -11,33 +11,61 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root'
 })
 export class TableService {
-  private store: Store<AppState> = inject(Store<AppState>)
-  private http: HttpClient = inject(HttpClient)
+  // Injects NgRx Store and HttpClient for state management and HTTP requests.
+  private store: Store<AppState> = inject(Store<AppState>);
+  private http: HttpClient = inject(HttpClient);
   
+  /**
+  * Dispatches an action to load table items from the store.
+ */
   loadItems(): void {
     this.store.dispatch(ItemActions.loadItems());
   }
 
+  /**
+   * Selects and returns the table column titles from the store.
+   * @returns Observable of table column titles.
+ */
   getTitles(): Observable<string[]> {
     return this.store.select(fromItemSelectors.selectItemTitles);
   }
 
+  /**
+   * Retrieves a list of all table items from the store.
+   * @returns Observable of table items.
+ */
   getItems(): Observable<Item[]> {
     return this.store.select(fromItemSelectors.selectAllItems);
   }
 
+  /**
+   * Fetches any errors encountered during table operations from the store.
+   * @returns Observable of error string, if any.
+ */
   getErrors(): Observable<string | null> {
     return this.store.select(fromItemSelectors.selectItemsError);
   }
 
+  /**
+   * Saves a new item to the table by dispatching it to the store.
+   * @param item The new item to be added.
+ */
   saveItem(item: Item): void {
     this.store.dispatch(ItemActions.addItem({ item }));
   }
 
+/**
+   * Updates an existing table item in the store.
+   * @param id The ID of the item to update.
+   * @param data The new data for the item.
+ */
   updateItemById(id: number, data: Item): void {
     this.store.dispatch(ItemActions.updateItem({ item: data, id: id }));
   }
 
+  /**
+   * @returns The total number of table items.
+ */
   getItemsLength(): number {
     let itemsLength = 0;
     of(null).pipe(
@@ -50,16 +78,23 @@ export class TableService {
     return itemsLength;
   }
 
-  loadItemHttp(): Observable<Item[]> {
-    return this.http.get<{ items: Item[] }>('assets/json/items.json').pipe(
-      map(response => response.items)
-    );
-  }
-  
-  saveItemsHttp(items$: Observable<Item[]>) {
-    items$.subscribe(items => {
-      this.store.dispatch(ItemActions.saveItems({ items }));
-    })
-   
-  }
+  /**
+   * Fetches table items from an external HTTP source.
+   * @returns Observable of table items.
+  */
+    loadItemHttp(): Observable<Item[]> {
+      return this.http.get<{ items: Item[] }>('assets/json/items.json').pipe(
+        map(response => response.items)
+      );
+    }
+    
+    /**
+     * Saves items to the store based on an external Observable source.
+     * @param items$ Observable of items to be saved.
+    */
+    saveItemsHttp(items$: Observable<Item[]>) {
+      items$.subscribe(items => {
+        this.store.dispatch(ItemActions.saveItems({ items }));
+      });
+    }
 }

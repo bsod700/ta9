@@ -10,10 +10,17 @@ import { MatButtonModule } from '@angular/material/button';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SearchBarComponent {
+  /**
+ * EventEmitter to emit the search term to parent components.
+ */
   @Output() searchEvent = new EventEmitter<string>();
 
   searchTerm: string = '';
 
+  /**
+ * Emits the entered search term to the parent component.
+ * @param value The search term entered by the user.
+ */
   search(value: string) {
     console.log(value);
     this.searchEvent.emit(value);

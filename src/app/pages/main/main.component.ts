@@ -6,15 +6,11 @@ import { Item } from '../../shared/interfaces/item.interface';
 import { HttpClientModule } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { NewItemComponent } from '../../shared/components/new-item/new-item.component';
-import { Store } from '@ngrx/store';
-import * as UserSelectors from '../../shared/store/user/selectors/user.selectors';
 import { LoginComponent } from '../../shared/components/login/login.component';
 import { CommonModule } from '@angular/common';
-import {MatIconModule} from '@angular/material/icon';
-import * as UserActions from '../../shared/store/user/actions/user.actions';
-import {MatButtonModule} from '@angular/material/button';
-import {MatDrawer, MatSidenavModule} from '@angular/material/sidenav';
-import { AppState } from '../../shared/store/core/app.state';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDrawer, MatSidenavModule } from '@angular/material/sidenav';
 import { UserService } from '../../shared/services/user.service';
 import { DataTable } from '../../shared/interfaces/data-table.interface';
 
@@ -28,84 +24,123 @@ import { DataTable } from '../../shared/interfaces/data-table.interface';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MainComponent implements OnInit {
+  // Reference to the MatDrawer component.
   @ViewChild('drawer') drawer!: MatDrawer;
 
-  private store: Store<AppState> = inject(Store<AppState>)
-  private userService: UserService = inject(UserService)
+  // Injects UserService and TableService for user and table data management.
+  private userService: UserService = inject(UserService);
+  private tableService: TableService = inject(TableService);
+
+  // Observable for the current user's username.
   username$!: Observable<string | null>;
 
+  // Holds the current filter value.
   filter = '';
-  tableService: TableService = inject(TableService)
 
+  // Data structure for the table, including titles and content.
   table: DataTable = {
     titles: [],
     content: []
-  }
-  username!: string | null;
+  };
 
-  selectedRow!: number | null
+  // The ID of the selected row in the table.
+  selectedRow!: number | null;
 
-  onExitClick: boolean = false
-  view: string = 'rows'
+  // Flag to indicate if the exit button was clicked.
+  onExitClick: boolean = false;
 
-  title: string = ''
+  // Current view mode for the table (rows or boxes).
+  view: 'rows' | 'boxes' = 'rows';
 
+  // Title of the component or page.
+  title: string = '';
+
+  /**
+ * Initializes component state, loads table data, and sets the title.
+ */
   ngOnInit(): void {
-    const items = this.tableService.loadItemHttp()
-    this.tableService.saveItemsHttp(items)
+    const items = this.tableService.loadItemHttp();
+    this.tableService.saveItemsHttp(items);
 
-    this.username$ = this.store.select(UserSelectors.selectUsername);
+    this.username$ = this.userService.getUser();
 
-    this.getTableContent()
+    this.getTableContent();
 
-    this.username$.subscribe(username => {
-      console.log('Username from store:', username);
-    });
-
-    this.title = 'Management Tool'
+    this.title = 'Management Tool';
   }
 
+  /**
+ * Applies the specified filter value to the table.
+ * @param filterValue The value to be applied as a filter.
+ */
   applyFilter(filterValue: string) {
     this.filter = filterValue;
   }
 
+  /**
+ * Logs out the current user.
+ */
   logout():void {
-    this.store.dispatch(UserActions.logout());
+    this.userService.logout();
   }
 
+  /**
+ * Fetches and updates the table content.
+ */
   getTableContent(): void {
     this.tableService.getItems().subscribe((data: Item[]) => {
       this.table.content = data;
-      this.getTableTitles()
+      this.getTableTitles();
     });
   }
-  
+
+  /**
+ * Retrieves and sets the table titles.
+ */
   getTableTitles(): void {
     this.tableService.getTitles().subscribe((titles: string[]) => {
       this.table.titles = titles;
     });
   }
 
+  /**
+ * Handles row click events in the table, setting the selected row and opening the drawer.
+ * @param id The ID of the clicked row.
+ */
   onRowClicked(id: number) {
     this.selectedRow = id;
-    this.drawer.open()
+    this.drawer.open();
   }
 
+  /**
+ * Updates the table data and resets the selected row.
+ */
   onItemSave() {
     this.table = {titles: this.table.titles, content: this.table.content};
-    this.selectedRow = null
+    this.selectedRow = null;
   }
 
+  /**
+ * Handles the exit click event, closing the drawer if needed.
+ * @param isClick Boolean indicating if the exit was clicked.
+ */
   exitClick(isClick: boolean) {
-    isClick ? this.drawer.close() : ''
+    isClick ? this.drawer.close() : '';
   }
 
+  /**
+ * Opens the drawer and resets the selected row, preparing for adding a new item.
+ */
   onClickOnAdd() {
-    this.drawer.open()
-    this.selectedRow = null
+    this.drawer.open();
+    this.selectedRow = null;
   }
   
-  changeView(view: string) {
-    this.view = view
+  /**
+ * Changes the current view of the table (rows or boxes).
+ * @param view The view mode to be set.
+ */
+  changeView(view: 'rows' | 'boxes') {
+    this.view = view;
   }
 }

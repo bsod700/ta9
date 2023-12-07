@@ -24,7 +24,7 @@
 
     <ng-container *ngIf="view === 'boxes'">
         <div class="boxes">
-            <div class="box shadow" *ngFor="let item of dataSource.filteredData" (click)="onRowClick(item)" [class.selected]="selectedRow === item">
+            <div class="box shadow" *ngFor="let item of paginatedData" (click)="onRowClick(item)" [class.selected]="selectedRow === item">
                 <div class="top">
                     <div class="color" [ngStyle]="{'background-color': item.color}"></div>
                 </div>

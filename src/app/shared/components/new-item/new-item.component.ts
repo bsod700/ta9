@@ -80,15 +80,14 @@ export class NewItemComponent implements OnInit {
     this.saveItem.emit(this.formData);
     this.resetForm();
     this.exitClick.emit(true);
+    this.itemIdToEdit = null
   }
 
   updateData(id: number, data: Item) {
-    if(id) {
+    if(id != null) {
       console.log('updateData data', data, ' id ', id);
-
       this.tableService.updateItemById(id,data);
     }
-      
   }
  
   onCancel() {

@@ -23,3 +23,29 @@ p {
     box-sizing: border-box;
     margin: 0;
 }
+.mat-mdc-raised-button.mat-warn {
+    --mdc-protected-button-container-color: transparent;
+    --mdc-protected-button-label-text-color: #707070;
+    --mat-protected-button-state-layer-color: #fff;
+    --mat-protected-button-ripple-color: rgba(255, 255, 255, 0.1);
+    border: solid 1px #707070;
+}
+.mat-mdc-raised-button.mat-primary {
+    --mdc-protected-button-container-color: #2BAE6D;
+    --mdc-protected-button-label-text-color: #fff;
+    --mat-protected-button-state-layer-color: #fff;
+    --mat-protected-button-ripple-color: rgba(255, 255, 255, 0.1);
+}
+html .mat-mdc-mini-fab.mat-primary {
+    --mdc-fab-container-color: transparent;
+    --mat-fab-foreground-color: #0E4F6E;
+    --mat-fab-state-layer-color: #0E4F6E;
+    --mat-fab-ripple-color: rgba(255, 255, 255, 0.1);
+    box-shadow: none !important;
+    &.selected {
+        --mat-fab-foreground-color: #007AF9;
+    }
+}
+.material-icons {
+    font-weight: bold;
+}

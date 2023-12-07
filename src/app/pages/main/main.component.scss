@@ -6,6 +6,7 @@
     z-index: 1;
     @include make-container(24px);
     padding-top: 12px;
+    overflow: hidden;
     .overlay {
         position: absolute;
         width: 100vw;
@@ -24,6 +25,10 @@
     .navbar {
         display: flex;
         flex-direction: row-reverse;
+        justify-content: center;
+        @include md {
+            justify-content: end;
+        }
         .user {
             display: flex;
             align-items: center;
@@ -31,13 +36,24 @@
             p {
                 margin-bottom: 0;
             }
+            .logout {
+                min-width: 110px;
+                display: flex;
+                flex-direction: row-reverse;
+                gap: 12px;
+                --mdc-fab-container-shape: 12px;
+              
+            }
         }
     }
     .content {
-        padding: 24px;
+        padding: 24px 0;
         height: calc(100vh - 12px);
         padding-bottom: 0;
         background-color: #F2F6F9;
+        @include md {
+            padding: 24px;
+        }
         .buttons {
             display: flex;
             gap: 6px;
@@ -68,6 +84,13 @@
         .top {
             display: flex;
             justify-content: space-between;
+            margin-bottom: 24px;
+            align-items: center;
+            h2 {
+                margin-bottom: 0;
+            }
+        }
+        .search {
             margin-bottom: 24px;
         }
     }

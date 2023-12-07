@@ -6,7 +6,7 @@
     <div class="drawer">
         <mat-drawer-container autosize hasBackdrop="true" from="right">
             <mat-drawer #drawer mode="side" mode="over" position="end">
-                <app-new-item (exitClick)="exitClick($event)" [itemIdToEdit]="selectedRow" (saveItem)="onItemSave($event)"/>
+                <app-new-item (exitClick)="exitClick($event)" [itemIdToEdit]="selectedRow" (saveItem)="onItemSave()"/>
             </mat-drawer>
         
             <div class="content">
@@ -15,14 +15,15 @@
                     <p *ngIf="username$ | async as username">
                         Hello {{ username }} 👋!
                     </p>
-                    <button mat-mini-fab color="primary" aria-label="logout" (click)="logout()">
+                    <button mat-mini-fab color="primary" aria-label="logout" (click)="logout()" class="logout">
                         <mat-icon>logout</mat-icon>
+                        <span>logout</span>
                     </button>
                 </div>
             </div>
             <div class="content">
-                <div class="top">
-                    <app-search-bar (searchEvent)="applyFilter($event)" />
+                <div class="top">   
+                    <h2 class="title">{{title}}</h2>          
                     <div class="buttons">
                         <div class="rows">
                             <button mat-mini-fab color="primary" aria-label="boxes" (click)="changeView('boxes')" [ngClass]="{'selected': view === 'boxes'}">
@@ -41,7 +42,9 @@
                         </div>
                     </div>
                 </div>
-            
+                <div class="search">
+                    <app-search-bar (searchEvent)="applyFilter($event)" />
+                </div>
 
 
                 <app-table [content]="table" (rowClicked)="onRowClicked($event)" [filter]="filter" [view]="view"/>

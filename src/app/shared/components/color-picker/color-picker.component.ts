@@ -11,17 +11,23 @@ import { ChangeDetectionStrategy, Component, ElementRef, EventEmitter, HostListe
 })
 export class ColorPickerComponent implements OnInit {
 
-  @Input() selectedColor: string = '#000000';
+  @Input('selectedColor') set _selectedColor(selectedColor: string) {
+    selectedColor = selectedColor ? selectedColor : this.generateRandomColor()
+    this.selectedColor = selectedColor
+    this.colorGrid = this.baseColors.map(baseColor => this.generateShades(baseColor));
+    this.selectColor(this.selectedColor)
+  };
   @Output() color = new EventEmitter<string>();
 
   baseColors: string[] = ['#000000', '#f44336', '#e91e62', '#9c27b0', '#673ab7', '#3e96f3', '#40a9f4', '#3abcd4', '#269688', '#faeb3b'];
   colorGrid: string[][] = [];
   isSelected = false;
 
+  selectedColor!: string
   constructor(private elRef: ElementRef) {}
   
   ngOnInit(): void {
-    this.colorGrid = this.baseColors.map(baseColor => this.generateShades(baseColor));
+    
   }
 
   generateShades(baseColor: string): string[] {
@@ -56,9 +62,14 @@ export class ColorPickerComponent implements OnInit {
     return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
   }
 
+  generateRandomColor(): string {
+    const randomHex = () => Math.floor(Math.random() * 256).toString(16).padStart(2, '0');
+    return `#${randomHex()}${randomHex()}${randomHex()}`;
+  }
+
   selectColor(color: string = '#000000'): void {
     this.selectedColor = color
-    this.color.emit(color)
+    this.color.emit(this.selectedColor)
   }
   toggleColorPicker(): void {
     this.isSelected = !this.isSelected

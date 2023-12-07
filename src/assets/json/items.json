@@ -2,21 +2,57 @@
    "items": [
         {
             "id": 0,
-            "description": "bla bla bla",
-            "color": "#fffa23",
-            "name": "corona",
+            "description": "Car accident",
+            "color": "#59E097",
+            "name": "Car accident",
             "createDate": "03/02/2021",
             "lastUpdate": "03/02/2021",
-            "createdBy": "piipii"
+            "createdBy": "Ori Lugasi"
         },
         {
             "id": 1,
-            "description": "bla bla bla",
-            "color": "#000000",
-            "name": "pizza",
-            "createDate": "03/02/2021",
+            "description": "Human trafficking for prostitution",
+            "color": "#FF1CE2",
+            "name": "Human trafficking for prostitution",
+            "createDate": "26/01/2021",
+            "lastUpdate": "26/01/2021",
+            "createdBy": "Ran Shim"
+        },
+        {
+            "id": 2,
+            "description": "Murder",
+            "color": "#AD0000",
+            "name": "Murder",
+            "createDate": "16/10/2021",
+            "lastUpdate": "16/10/2021",
+            "createdBy": "Chen Meir"
+        },
+        {
+            "id": 3,
+            "description": "Suspect",
+            "color": "#FF6C00",
+            "name": "Suspect",
+            "createDate": "01/09/2021",
+            "lastUpdate": "24/12/2021",
+            "createdBy": "Or Bar"
+        },
+        {
+            "id": 4,
+            "description": "Terrorist",
+            "color": "#FFBA00",
+            "name": "Terrorist",
+            "createDate": "30/11/2021",
+            "lastUpdate": "30/11/2021",
+            "createdBy": "Chen Meir"
+        },
+        {
+            "id": 5,
+            "description": "Terrorist attack",
+            "color": "#FF0000",
+            "name": "Terrorist attack",
+            "createDate": "09/08/2020",
             "lastUpdate": "03/02/2021",
-            "createdBy": "poopoo"
+            "createdBy": "Or Bar"
         }
    ]
 }

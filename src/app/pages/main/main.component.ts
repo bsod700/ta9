@@ -48,6 +48,8 @@ export class MainComponent implements OnInit {
   onExitClick: boolean = false
   view: string = 'rows'
 
+  title: string = ''
+
   ngOnInit(): void {
     const items = this.tableService.loadItemHttp()
     this.tableService.saveItemsHttp(items)
@@ -59,11 +61,11 @@ export class MainComponent implements OnInit {
     this.username$.subscribe(username => {
       console.log('Username from store:', username);
     });
+
+    this.title = 'Management Tool'
   }
 
   applyFilter(filterValue: string) {
-    console.log('filterValue ', filterValue);
-    
     this.filter = filterValue;
   }
 
@@ -89,8 +91,9 @@ export class MainComponent implements OnInit {
     this.drawer.open()
   }
 
-  onItemSave(data: Item | null) {
+  onItemSave() {
     this.table = {titles: this.table.titles, content: this.table.content};
+    this.selectedRow = null
   }
 
   exitClick(isClick: boolean) {

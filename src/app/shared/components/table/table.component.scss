@@ -1,10 +1,47 @@
+@import "../../../../styles/core/mixin";
 
+:host ::ng-deep {
+    .mat-header-row {
+      background-color: transparent;
+      box-shadow: none;
+    }
+  
+    .mat-row {
+      background-color: white;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+      margin-bottom: 10px;
+    }
+  
+    .mat-cell, .mat-header-cell {
+      border-bottom: none;
+      border: none;
+    }
+    .mat-mdc-table {
+        background-color: transparent;
+        box-shadow: none;
+    }
+    .mat-mdc-header-cell, .mat-mdc-cell {
+        border: none;
+    }
+    tbody tr {
+        background-color: #fff;
+        box-shadow: $shadow;
+        transition: all ease-in-out .2s;
+        &:hover {
+            background-color: #d4e7fb;
+        }
+    }
+  }
 .table-wrapper {
     display: flex;
     flex-direction: column;
-    height: calc(100vh - 180px);
+    height: calc(100vh - 250px);
     justify-content: space-between;
+
     table {
+        border-collapse: separate;
+        border-spacing: 0 10px;
+        overflow-x: scroll;
         tr {
             cursor: pointer;
             th,td {

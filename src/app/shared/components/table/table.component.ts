@@ -21,6 +21,8 @@ export class TableComponent implements AfterViewInit  {
   @Input('content') set _content(content: DataTable) {
     this.setDataSource(content.content);
     this.content = content;
+    this.paginatedData = content.content
+    this.applyFilter()
   }
   @Input() filter = "";
   @Output() rowClicked = new EventEmitter<number>();
@@ -35,6 +37,8 @@ export class TableComponent implements AfterViewInit  {
 
   content!: DataTable;
 
+  paginatedData: Item[] = [];
+
   private _liveAnnouncer: LiveAnnouncer = inject(LiveAnnouncer);
 
   @ViewChild(MatSort) sort!: MatSort;
@@ -43,6 +47,7 @@ export class TableComponent implements AfterViewInit  {
   ngAfterViewInit() {
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
+    this.paginateData();
   }
 
   onRowClick(row: Item) {
@@ -63,6 +68,9 @@ export class TableComponent implements AfterViewInit  {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.pageIndex = event.pageIndex;
     }
+
+    this.paginator.pageIndex = event.pageIndex;
+    this.paginateData();
   }
 
   setDataSource(data: Item[]) {
@@ -82,4 +90,8 @@ export class TableComponent implements AfterViewInit  {
     return /^#([0-9a-f]{3}){1,2}$/i.test(value);
   }
   
+  paginateData() {
+    const startIndex = this.paginator.pageIndex * this.paginator.pageSize;
+    this.paginatedData = this.dataSource.filteredData.slice(startIndex, startIndex + this.paginator.pageSize);
+  }
 }

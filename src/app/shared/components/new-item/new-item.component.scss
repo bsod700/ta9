@@ -1,11 +1,13 @@
 @import "../../../../styles/core/mixin";
 .new-item-wrapper {
     position: relative;
-    padding: 50px 75px;
+    padding: 50px 100px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     height: 100%;
+    background-color: #f2f6f9;
+    // #2BAE6D
     .close {
         position: absolute;
         top: 12px;
@@ -36,8 +38,11 @@
         background-color: #fff;
         box-shadow: $shadow;
         border-radius: 6px;
+        min-width: 300px;
+        padding: 6px 12px;
     }
     textarea {
-
+        max-width: 376px;
+        min-height: 200px;
     }
 }

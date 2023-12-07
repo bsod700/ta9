@@ -31,6 +31,7 @@ export class TableComponent implements AfterViewInit  {
   @Input('filter') set _filter(filter: string) {
     this.filter = filter
     this.applyFilter();
+    this.paginateData();
   };
   @Output() rowClicked = new EventEmitter<number>();
   @Input() view: string = 'rows';

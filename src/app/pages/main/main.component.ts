@@ -52,7 +52,7 @@ export class MainComponent implements OnInit {
   // Current view mode for the table (rows or boxes).
   view: 'rows' | 'boxes' = 'rows';
 
-  // Title of the component or page.
+  // Title of the component
   title: string = '';
 
   /**
